@@ -43,6 +43,11 @@ export default function GameStart() {
     cpuSound.current.currentTime = 0;
   };
 
+  const doneWithSound = () => {
+    stopSound();
+    console.log("Done with sound!");
+  };
+
   useEffect(() => {
     if (!loading && message && !isPaused) {
       playSound();
@@ -59,8 +64,10 @@ export default function GameStart() {
             return;
           }
 
-          if (currentIndex >= message.length - 1) {
-            stopSound();
+          if (currentIndex + 1 === message.length) {
+            setIsPaused(true);
+            doneWithSound();
+            console.log("currentIndex is too big!");
           }
         }
       };
@@ -73,7 +80,6 @@ export default function GameStart() {
 
       return () => {
         clearInterval(charDisplayInterval);
-        // stopSound();
       };
     }
   }, [loading, message, isPaused, currentIndex]);
@@ -82,7 +88,6 @@ export default function GameStart() {
     const handleKeyPress = () => {
       if (isPaused) {
         setIsPaused(false);
-        // playSound();
       }
     };
 
