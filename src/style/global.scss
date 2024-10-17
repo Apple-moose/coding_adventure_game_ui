@@ -1,0 +1,13 @@
+@import "./config";
+@import "~bootstrap";
+
+.GameBasic {
+    background-color: #202225;
+    min-height: 100vh;
+    display: flex;
+    color: rgb(2, 155, 25);
+    // flex-direction: column;
+    // align-items: center;
+    // justify-content: center;
+    // font-size: calc(300px + 5vmin);
+  }
