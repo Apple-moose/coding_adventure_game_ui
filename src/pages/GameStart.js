@@ -9,8 +9,18 @@ export default function GameStart() {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(true);
   const [displayedMessage, setDisplayedMessage] = useState("");
+  const [isPaused, setIsPaused] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [soundPlaying, setSoundPlaying] = useState(false);
 
   const cpuSound = new Audio("cpu_answer_noise1.mp3");
+  const playSound = () => {
+    cpuSound.play();
+  };
+  const stopSound = () => {
+    cpuSound.pause();
+    cpuSound.currentTime = 0;
+  };
 
   const fetchMessage = async () => {
     try {
@@ -29,22 +39,66 @@ export default function GameStart() {
   }, []);
 
   useEffect(() => {
-    if (!loading && message) {
-      let currentIndex = -1;
-      cpuSound.play();
-      const displayInterval = setInterval(() => {
-        currentIndex++; //(currentIndex = currentIndex + 1)
+    if (soundPlaying) {
+      if (cpuSound.paused) {
+        cpuSound.play();
+      }
+    } else {
+      cpuSound.pause();
+      cpuSound.currentTime = 0;
+    }
+  }, [soundPlaying]);
+
+  useEffect(() => {
+    if (!loading && message && !isPaused) {
+      setSoundPlaying(true);
+      
+      const displayNextChar = () => {
         if (currentIndex < message.length) {
-          setDisplayedMessage((prev) => prev + message[currentIndex]);
-        } else {
-          clearInterval(displayInterval);
-          cpuSound.pause();
-          cpuSound.currentTime = 0;
+          const currentChar = message[currentIndex];
+          setDisplayedMessage((prev) => prev + currentChar);
+          setCurrentIndex((prevIndex) => prevIndex + 1);
+
+          if (currentChar === ">") {
+            setSoundPlaying(false);
+            setIsPaused(true);
+            return;
+          }
+
+          if (currentIndex >= message.length - 1) {
+            setSoundPlaying(false);
+          }
+        }
+      };
+
+      const charDisplayInterval = setInterval(() => {
+        if (!isPaused) {
+          displayNextChar();
         }
       }, 100);
-      return () => clearInterval(displayInterval);
+
+      return () => {
+        clearInterval(charDisplayInterval);
+        setSoundPlaying(false);
+      };
     }
-  }, [loading, message]);
+  }, [loading, message, isPaused, currentIndex]);
+
+  useEffect(() => {
+    const handleKeyPress = () => {
+      if (isPaused) {
+        setIsPaused(false);
+        if (!soundPlaying) {
+          setSoundPlaying(true);
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyPress);
+    return () => {
+      window.removeEventListener("keydown", handleKeyPress);
+    };
+  }, [isPaused]);
 
   return (
     <Container>
