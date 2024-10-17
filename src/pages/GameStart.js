@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { Container, Row } from "react-bootstrap";
 import "../style/global.scss";
@@ -13,14 +13,7 @@ export default function GameStart() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [soundPlaying, setSoundPlaying] = useState(false);
 
-  const cpuSound = new Audio("cpu_answer_noise1.mp3");
-  const playSound = () => {
-    cpuSound.play();
-  };
-  const stopSound = () => {
-    cpuSound.pause();
-    cpuSound.currentTime = 0;
-  };
+  const cpuSound = useRef(new Audio("cpu_answer_noise1.mp3"));
 
   const fetchMessage = async () => {
     try {
@@ -38,21 +31,22 @@ export default function GameStart() {
     fetchMessage();
   }, []);
 
-  useEffect(() => {
-    if (soundPlaying) {
-      if (cpuSound.paused) {
-        cpuSound.play();
-      }
-    } else {
-      cpuSound.pause();
-      cpuSound.currentTime = 0;
+  const playSound = () => {
+    if (cpuSound.current.paused) {
+      cpuSound.current.play().catch((err) => console.log("Play error: ", err));
     }
-  }, [soundPlaying]);
+  };
+
+  // Function to stop the sound
+  const stopSound = () => {
+    cpuSound.current.pause();
+    cpuSound.current.currentTime = 0;
+  };
 
   useEffect(() => {
     if (!loading && message && !isPaused) {
-      setSoundPlaying(true);
-      
+      playSound();
+
       const displayNextChar = () => {
         if (currentIndex < message.length) {
           const currentChar = message[currentIndex];
@@ -60,13 +54,13 @@ export default function GameStart() {
           setCurrentIndex((prevIndex) => prevIndex + 1);
 
           if (currentChar === ">") {
-            setSoundPlaying(false);
+            stopSound();
             setIsPaused(true);
             return;
           }
 
           if (currentIndex >= message.length - 1) {
-            setSoundPlaying(false);
+            stopSound();
           }
         }
       };
@@ -79,7 +73,7 @@ export default function GameStart() {
 
       return () => {
         clearInterval(charDisplayInterval);
-        setSoundPlaying(false);
+        // stopSound();
       };
     }
   }, [loading, message, isPaused, currentIndex]);
@@ -88,9 +82,7 @@ export default function GameStart() {
     const handleKeyPress = () => {
       if (isPaused) {
         setIsPaused(false);
-        if (!soundPlaying) {
-          setSoundPlaying(true);
-        }
+        // playSound();
       }
     };
 
