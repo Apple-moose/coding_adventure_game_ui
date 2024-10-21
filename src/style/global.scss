@@ -11,3 +11,27 @@
     // justify-content: center;
     // font-size: calc(300px + 5vmin);
   }
+
+  .cursor {
+    display: inline-block;
+    animation: blink 1s step-start infinite;
+  }
+  
+  @keyframes blink {
+    50% {
+      opacity: 0;
+    }
+  }
+
+  #command {
+    width: 0;
+    height: 0;
+    border: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  
+  
+  
+  
