@@ -8,6 +8,10 @@ html, body {
   height: 100%;
   // overflow-x: hidden;  // Prevents horizontal scrolling if content goes over
 }
+input {
+  direction: ltr; /* Forces left-to-right text direction */
+}
+
 .HomePage {
   background-color: black;
   min-height: 100vh;

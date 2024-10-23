@@ -260,6 +260,8 @@ export default function GameStart() {
                 type="text"
                 value={command}
                 onChange={(e) => setCommand(e.target.value)}
+                onFocus={() => setIsCursorHidden(false)}
+                onBlur={() => setIsCursorHidden(true)}
                 onKeyDown={(e) => {
                   if (e.key === "Enter" && isCompleted) {
                     fetchGameData(command);
