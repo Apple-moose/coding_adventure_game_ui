@@ -11,8 +11,17 @@ body {
 input {
   direction: ltr;
   text-align: left;
+  width: 100%;
 }
-
+#command {
+  width: auto;  /* Change to auto or a fixed size */
+  height: auto; /* Change to auto or a fixed size */
+  border: none;
+  padding: 0.5rem; /* Add padding for better touch targets */
+  margin: 0;
+  background-color: transparent; /* Adjust background color as needed */
+  color: white; /* Ensure text is visible */
+}
 .HomePage {
   background-color: black;
   min-height: 100vh;

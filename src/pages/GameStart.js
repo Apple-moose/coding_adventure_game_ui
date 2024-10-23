@@ -193,19 +193,25 @@ export default function GameStart() {
   // Countdown----------------------------
   useEffect(() => {
     let countdownInterval;
-    if (countdownActive && countdown > 0) {
-      countdownInterval = setInterval(() => {
-        setCountdown((t) => t - 1);
-      }, 1000);
-    } else if (countdown === 0) {
-      setIsOn(false);
+
+    if (isOn) {
+      if (countdownActive && countdown > 0) {
+        countdownInterval = setInterval(() => {
+          setCountdown((t) => t - 1);
+        }, 1000);
+      } else if (countdown === 0) {
+        setIsOn(false);
+        setCountdownActive(false);
+      }
+    } else {
+      setCountdown(10);
       setCountdownActive(false);
     }
 
     return () => {
       clearInterval(countdownInterval);
     };
-  }, [countdownActive, countdown]);
+  }, [countdownActive, countdown, isOn]);
 
   useEffect(() => {
     const handleKeyPress = () => {
