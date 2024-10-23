@@ -4,7 +4,10 @@ import { Container, Row, Form, Button } from "react-bootstrap";
 import "../style/global.scss";
 
 export default function GameStart() {
-  const API_URL = `http://localhost:8000`;
+  //Local
+  //   const API_URL = `http://localhost:8000`;
+  //Online
+  const API_URL = `https://coding-adventurepipenv-run-uvicorn-main.onrender.com`;
 
   const [isOn, setIsOn] = useState(false);
   const [message, setMessage] = useState("");
@@ -148,9 +151,10 @@ export default function GameStart() {
               ...prev,
               <br key={`line-b-key-${currentIndex}`} />,
             ]);
-            return;}
+            return;
+          }
 
-           if (currentChar === "@") {
+          if (currentChar === "@") {
             setDisplayedMessage((prev) => [...prev, ""]);
             setCountdown(10);
             setCountdownActive(true);
@@ -158,7 +162,7 @@ export default function GameStart() {
             stopSound();
             return;
           }
-             
+
           setDisplayedMessage((prev) => [...prev, currentChar]);
 
           if (currentIndex + 1 === message.length) {
