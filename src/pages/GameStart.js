@@ -263,13 +263,14 @@ export default function GameStart() {
               <Form.Control
                 id="command"
                 name="command"
-                type="text"
+                type="tel"
                 value={command}
                 onChange={(e) => setCommand(e.target.value)}
                 onKeyDown={(e) => {
                   if (e.key === "Enter" && isCompleted) {
                     fetchGameData(command);
                     setCommand("");
+                    e.preventDefault();
                   }
                 }}
                 autoFocus

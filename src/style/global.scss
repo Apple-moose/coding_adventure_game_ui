@@ -13,14 +13,18 @@ input {
   text-align: left;
   width: 100%;
 }
+// #command {
+//   width: auto;  /* Change to auto or a fixed size */
+//   height: auto; /* Change to auto or a fixed size */
+//   border: none;
+//   padding: 0.5rem; /* Add padding for better touch targets */
+//   margin: 0;
+//   background-color: transparent; /* Adjust background color as needed */
+//   color: white; /* Ensure text is visible */
+// }
 #command {
-  width: auto;  /* Change to auto or a fixed size */
-  height: auto; /* Change to auto or a fixed size */
-  border: none;
-  padding: 0.5rem; /* Add padding for better touch targets */
-  margin: 0;
-  background-color: transparent; /* Adjust background color as needed */
-  color: white; /* Ensure text is visible */
+  direction: ltr; /* Ensures left-to-right text direction */
+  text-align: left; /* Aligns text to the left */
 }
 .HomePage {
   background-color: black;
