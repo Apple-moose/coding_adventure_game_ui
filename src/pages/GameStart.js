@@ -220,7 +220,7 @@ export default function GameStart() {
       window.removeEventListener("keydown", handleKeyPress);
       setCommand("");
     };
-  }, [isPaused]);
+  }, [isPaused, isCompleted]);
 
   //---------RENDER----------------------------------
 
