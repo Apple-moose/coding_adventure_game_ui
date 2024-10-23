@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import axios from "axios";
 import { Container, Row, Form, Button } from "react-bootstrap";
 import "../style/global.scss";
@@ -31,7 +31,7 @@ export default function GameStart() {
   };
 
   //--------------Async functions------------------------------------
-  const fetchMessage = async () => {
+  const fetchMessage = useCallback(async () => {
     try {
       const response = await axios.get(`${API_URL}`);
       const message = response.data.message;
@@ -45,29 +45,34 @@ export default function GameStart() {
       console.log(e.message);
       setLoading(false);
     }
-  };
+  }, [API_URL]);
 
-  const fetchGameData = async (com) => {
-    try {
-      const response = await axios.post(`${API_URL}/command`, { command: com });
-      const message = response.data.situation || response.data.message;
-      setMessage(message);
-      setDisplayedMessage([]);
-      setCurrentIndex(0);
-      setIsPaused(false);
-      setIsCompleted(false);
-      setLoading(false);
-    } catch (e) {
-      console.log(e.message);
-      setLoading(false);
-    }
-  };
+  const fetchGameData = useCallback(
+    async (com) => {
+      try {
+        const response = await axios.post(`${API_URL}/command`, {
+          command: com,
+        });
+        const message = response.data.situation || response.data.message;
+        setMessage(message);
+        setDisplayedMessage([]);
+        setCurrentIndex(0);
+        setIsPaused(false);
+        setIsCompleted(false);
+        setLoading(false);
+      } catch (e) {
+        console.log(e.message);
+        setLoading(false);
+      }
+    },
+    [API_URL]
+  );
   //---------Sound functions---------------------------------------
-  const playSound = () => {
+  const playSound = useCallback(() => {
     if (cpuSound.current.paused) {
       cpuSound.current.play().catch((err) => console.log("Play error: ", err));
     }
-  };
+  }, []);
   const stopSound = () => {
     cpuSound.current.pause();
     cpuSound.current.currentTime = 0;
@@ -126,7 +131,7 @@ export default function GameStart() {
     if (isOn) {
       fetchMessage();
     }
-  }, [isOn]);
+  }, [isOn, fetchMessage]);
 
   useEffect(() => {
     if (!loading && message && !isPaused && !isCompleted) {
@@ -183,7 +188,7 @@ export default function GameStart() {
         clearInterval(charDisplayInterval);
       };
     }
-  }, [loading, message, isPaused, currentIndex]);
+  }, [loading, message, isPaused, currentIndex, isCompleted, playSound]);
 
   // Countdown----------------------------
   useEffect(() => {
