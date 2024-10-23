@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
-import { Container, Row, Form, Button, Col } from "react-bootstrap";
+import { Container, Row, Form, Button } from "react-bootstrap";
 import "../style/global.scss";
 
 export default function GameStart() {
@@ -15,6 +15,8 @@ export default function GameStart() {
   const [isCompleted, setIsCompleted] = useState(false);
   const [command, setCommand] = useState("");
   const [isCursorHidden, setIsCursorHidden] = useState(true);
+  const [countdown, setCountdown] = useState(10);
+  const [countdownActive, setCountdownActive] = useState(false);
 
   const cpuSound = useRef(new Audio("cpu_answer_noise1.mp3"));
   const oldCpu = useRef(new Audio("old_cpu_sound.mp3"));
@@ -122,7 +124,6 @@ export default function GameStart() {
       fetchMessage();
     }
   }, [isOn]);
-  
 
   useEffect(() => {
     if (!loading && message && !isPaused && !isCompleted) {
@@ -147,14 +148,19 @@ export default function GameStart() {
               ...prev,
               <br key={`line-b-key-${currentIndex}`} />,
             ]);
+            return;}
+
+           if (currentChar === "@") {
+            setDisplayedMessage((prev) => [...prev, ""]);
+            setCountdown(10);
+            setCountdownActive(true);
+            setIsCompleted(true);
+            stopSound();
             return;
-          } else {
-            setDisplayedMessage((prev) => [...prev, currentChar]);
           }
-          if (currentChar === "@") {
-            
-          }
-          
+             
+          setDisplayedMessage((prev) => [...prev, currentChar]);
+
           if (currentIndex + 1 === message.length) {
             setIsPaused(true);
             setIsCompleted(true);
@@ -175,12 +181,30 @@ export default function GameStart() {
     }
   }, [loading, message, isPaused, currentIndex]);
 
+  // Countdown----------------------------
+  useEffect(() => {
+    let countdownInterval;
+    if (countdownActive && countdown > 0) {
+      countdownInterval = setInterval(() => {
+        setCountdown((t) => t - 1);
+      }, 1000);
+    } else if (countdown === 0) {
+      setIsOn(false);
+      setCountdownActive(false);
+    }
+
+    return () => {
+      clearInterval(countdownInterval);
+    };
+  }, [countdownActive, countdown]);
+
   useEffect(() => {
     const handleKeyPress = () => {
       if (isPaused && !isCompleted) {
         setIsPaused(false);
       }
     };
+    //-------Key listener--------------------
 
     window.addEventListener("keydown", handleKeyPress);
     return () => {
@@ -189,12 +213,17 @@ export default function GameStart() {
     };
   }, [isPaused]);
 
+  //---------RENDER----------------------------------
+
   return (
     <Container fluid className="GameBasic" style={{ padding: "0 1 rem" }}>
       <Row className="fs-2 text-left">
         <div style={{ marginTop: "1rem" }}>
           <Button
-            onClick={() => {toggleButton(); playBeep()}}
+            onClick={() => {
+              toggleButton();
+              playBeep();
+            }}
             variant={isOn ? "success" : "danger"}
             style={{
               borderRadius: "50%",
@@ -231,6 +260,11 @@ export default function GameStart() {
                 autoFocus
                 autoComplete="off"
               />
+              {countdownActive && (
+                <div className="countdown-display">
+                  Extinction in{""} {countdown}
+                </div>
+              )}
             </div>
           )}
         </Row>

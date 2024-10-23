@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { Container, Row, Button, Image } from "react-bootstrap";
+import { Row, Image } from "react-bootstrap";
 import "../style/global.scss";
 
 export default function HomePage() {
