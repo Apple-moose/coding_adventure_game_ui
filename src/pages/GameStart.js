@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
-import { Container, Row, Form } from "react-bootstrap";
+import { Container, Row, Form, Button, Col } from "react-bootstrap";
 import "../style/global.scss";
 
 export default function GameStart() {
   const API_URL = `http://localhost:8000`;
 
+  const [isOn, setIsOn] = useState(false);
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(true);
   const [displayedMessage, setDisplayedMessage] = useState("");
@@ -13,8 +14,17 @@ export default function GameStart() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isCompleted, setIsCompleted] = useState(false);
   const [command, setCommand] = useState("");
+  const [isCursorHidden, setIsCursorHidden] = useState(true);
 
   const cpuSound = useRef(new Audio("cpu_answer_noise1.mp3"));
+  const oldCpu = useRef(new Audio("old_cpu_sound.mp3"));
+  const click_beep = useRef(new Audio("click_beep.mp3"));
+
+  //------------Button On-Off logic------------------------------
+  const toggleButton = () => {
+    setIsOn((prev) => !prev);
+  };
+
   //--------------Async functions------------------------------------
   const fetchMessage = async () => {
     try {
@@ -35,7 +45,6 @@ export default function GameStart() {
   const fetchGameData = async (com) => {
     try {
       const response = await axios.post(`${API_URL}/command`, { command: com });
-      console.log(response.data);
       const message = response.data.situation || response.data.message;
       setMessage(message);
       setDisplayedMessage([]);
@@ -58,11 +67,62 @@ export default function GameStart() {
     cpuSound.current.pause();
     cpuSound.current.currentTime = 0;
   };
-  //----------Dpendencies--------------------------------------------
+
+  const playOldCpuSound = () => {
+    oldCpu.current.volume = 0.05;
+    oldCpu.current.loop = true;
+    oldCpu.current.play();
+  };
+
+  const stopOldCpuSound = () => {
+    oldCpu.current.pause();
+    oldCpu.current.currentTime = 0;
+  };
+
+  const playBeep = () => {
+    click_beep.current.play();
+  };
+  //-----------Cursor control logic-------------------------------
+  const toggleCursor = (hide) => {
+    document.body.style.cursor = hide ? "none" : "default";
+  };
 
   useEffect(() => {
-    fetchMessage();
+    const handleKeyCombination = (event) => {
+      if (event.ctrlKey && event.key === "q") {
+        setIsCursorHidden((prev) => !prev);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyCombination);
+    return () => {
+      window.removeEventListener("keydown", handleKeyCombination);
+    };
   }, []);
+
+  useEffect(() => {
+    if (isOn) {
+      toggleCursor(isCursorHidden);
+    } else {
+      toggleCursor(!isCursorHidden);
+    }
+  }, [isOn, isCursorHidden]);
+
+  //----------Dpendencies--------------------------------------------
+  useEffect(() => {
+    if (isOn) {
+      playOldCpuSound();
+    } else {
+      stopOldCpuSound();
+    }
+  }, [isOn]);
+
+  useEffect(() => {
+    if (isOn) {
+      fetchMessage();
+    }
+  }, [isOn]);
+  
 
   useEffect(() => {
     if (!loading && message && !isPaused && !isCompleted) {
@@ -91,6 +151,10 @@ export default function GameStart() {
           } else {
             setDisplayedMessage((prev) => [...prev, currentChar]);
           }
+          if (currentChar === "@") {
+            
+          }
+          
           if (currentIndex + 1 === message.length) {
             setIsPaused(true);
             setIsCompleted(true);
@@ -126,33 +190,53 @@ export default function GameStart() {
   }, [isPaused]);
 
   return (
-    <Container>
-      <Row className="fs-3 text-left mt-5">
-        {loading ? (
-          <div>Loading...</div>
-        ) : (
-          <div>
-            {displayedMessage}
-            {command}
-            <b className="cursor">_</b>
-            <Form.Control
-              id="command"
-              name="command"
-              type="text"
-              value={command}
-              onChange={(e) => setCommand(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" && isCompleted) {
-                  fetchGameData(command);
-                  setCommand("");
-                }
-              }}
-              autoFocus
-              autoComplete="off"
-            />
-          </div>
-        )}
+    <Container fluid className="GameBasic" style={{ padding: "0 1 rem" }}>
+      <Row className="fs-2 text-left">
+        <div style={{ marginTop: "1rem" }}>
+          <Button
+            onClick={() => {toggleButton(); playBeep()}}
+            variant={isOn ? "success" : "danger"}
+            style={{
+              borderRadius: "50%",
+              width: "50px",
+              height: "50px",
+              marginRight: "1rem",
+              transition: "background-color 0.9s ease",
+            }}
+          ></Button>
+          <span>{!isOn ? "Off" : "On"}</span>
+        </div>
       </Row>
+      {isOn ? (
+        <Row className="fs-3 text-left mt-4 ms-5 me-1">
+          {loading ? (
+            <div>Loading...</div>
+          ) : (
+            <div>
+              {displayedMessage}
+              {command}
+              <b className="cursor">_</b>
+              <Form.Control
+                id="command"
+                name="command"
+                type="text"
+                value={command}
+                onChange={(e) => setCommand(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && isCompleted) {
+                    fetchGameData(command);
+                    setCommand("");
+                  }
+                }}
+                autoFocus
+                autoComplete="off"
+              />
+            </div>
+          )}
+        </Row>
+      ) : (
+        <></>
+      )}
     </Container>
   );
 }

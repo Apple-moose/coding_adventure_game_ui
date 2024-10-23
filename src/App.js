@@ -6,12 +6,11 @@ import GameStart from "./pages/GameStart";
 
 export default function App() {
 return (
-
-<div className="GameBasic">
+<>
 <Routes>
 <Route path="/" element={<HomePage />} />
 <Route path="/start" element={<GameStart />} />
 </Routes>
-</div>
+</>
 );
 }
