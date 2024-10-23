@@ -263,7 +263,7 @@ export default function GameStart() {
               <Form.Control
                 id="command"
                 name="command"
-                type="tel"
+                type="search"
                 value={command}
                 onChange={(e) => setCommand(e.target.value)}
                 onKeyDown={(e) => {
