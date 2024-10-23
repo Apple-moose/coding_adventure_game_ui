@@ -263,19 +263,28 @@ export default function GameStart() {
               <Form.Control
                 id="command"
                 name="command"
-                type="search"
+                type="text"
                 value={command}
-                onChange={(e) => setCommand(e.target.value)}
+                onChange={(e) => {
+                  setCommand(e.target.value);
+                  e.target.setSelectionRange(
+                    e.target.value.length,
+                    e.target.value.length
+                  );
+                }}
                 onKeyDown={(e) => {
-                  if (e.key === "Enter" && isCompleted) {
-                    fetchGameData(command);
-                    setCommand("");
+                  if (e.key === "Enter") {
+                    if (isCompleted) {
+                      fetchGameData(command);
+                      setCommand("");
+                    }
                     e.preventDefault();
                   }
                 }}
                 autoFocus
                 autoComplete="off"
               />
+
               {countdownActive && (
                 <div className="countdown-display">
                   Extinction in{""} {countdown}
