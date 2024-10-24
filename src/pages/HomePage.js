@@ -9,14 +9,14 @@ export default function HomePage() {
   return (
     <>
       <div className="HomePage">
-        <Row className="w-100">
-          <div className="mt-2 ms-3 fs-1 text-center">
-            Welcome to my Coder's Profile game
+        <Row className="w-100 justify-content-center">
+          <div className="mt-2 ms-3 fs-1 text-center title">
+            A Coder's Profile mini-game
           </div>
         </Row>
         <Row
           className="p-0 m-0"
-          style={{ position: "relative", width: "100%" }}
+          style={{ position: "relative", width: "100%", overflow: "hidden" }}
         >
           <Image
             src="old_computer.jpg"

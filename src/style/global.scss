@@ -7,24 +7,17 @@ body {
   padding: 0;
   width: 100%;
   height: 100%;
+  overflow-x: hidden;
 }
 input {
   direction: ltr;
   text-align: left;
   width: 100%;
 }
-// #command {
-//   width: auto;  /* Change to auto or a fixed size */
-//   height: auto; /* Change to auto or a fixed size */
-//   border: none;
-//   padding: 0.5rem; /* Add padding for better touch targets */
-//   margin: 0;
-//   background-color: transparent; /* Adjust background color as needed */
-//   color: white; /* Ensure text is visible */
-// }
+
 #command {
-  direction: ltr; /* Ensures left-to-right text direction */
-  text-align: left; /* Aligns text to the left */
+  direction: ltr;
+  text-align: left;
 }
 .HomePage {
   background-color: black;
@@ -34,6 +27,13 @@ input {
   flex-direction: column;
   align-items: center;
   color: rgb(2, 155, 25);
+  overflow: hidden;
+  padding: 0;
+  margin: 0;
+}
+.title {
+  width: 100%;
+  text-align: center;
 }
 .GameBasic {
   background-color: #202225;

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import axios from "axios";
-import { Container, Row, Form, Button } from "react-bootstrap";
+import { Container, Row, Form, Button, Image } from "react-bootstrap";
 import "../style/global.scss";
 
 export default function GameStart() {
@@ -232,29 +232,56 @@ export default function GameStart() {
 
   return (
     <Container fluid className="GameBasic" style={{ padding: "0 1 rem" }}>
-      <Row className="fs-2 text-left">
+      <Row className="fs-2 text-left align-items-center">
         <div style={{ marginTop: "1rem" }}>
-          <Button
+          <div
+            style={{ position: "relative", width: "4%", height: "auto" }}
             onClick={() => {
               toggleButton();
               playBeep();
             }}
-            variant={isOn ? "success" : "danger"}
+          >
+            <Image
+              src="on_button3.png"
+              alt="on"
+              className="button"
+              style={{
+                position: "absolute",
+                width: "100%",
+                height: "auto",
+                opacity: isOn ? 1 : 0,
+                transition: "opacity 1s ease-in-out",
+              }}
+            />
+            <Image
+              src="off_button3.png"
+              alt="off"
+              className="button"
+              style={{
+                position: "absolute",
+                width: "100%",
+                height: "auto",
+                opacity: isOn ? 0 : 1,
+                transition: "opacity 1s ease-in-out",
+              }}
+            />
+          </div>
+          <div
             style={{
-              borderRadius: "50%",
-              width: "50px",
-              height: "50px",
-              marginRight: "1rem",
-              transition: "background-color 0.9s ease",
+              display: "inline-block",
+              position: "relative",
+              top: "0.1rem",
+              left: "3.5rem",
             }}
-          ></Button>
-          <span>{!isOn ? "Off" : "On"}</span>
+          >
+            {!isOn ? "Off" : "On"}
+          </div>
         </div>
       </Row>
       {isOn ? (
         <Row className="fs-3 text-left mt-4 ms-5 me-1">
           {loading ? (
-            <div>Loading...</div>
+            <div>Reaching for server. Please wait...</div>
           ) : (
             <div>
               {displayedMessage}
