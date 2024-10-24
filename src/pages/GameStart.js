@@ -235,7 +235,7 @@ export default function GameStart() {
       <Row className="fs-2 text-left align-items-center">
         <div style={{ marginTop: "1rem" }}>
           <div
-            style={{ position: "relative", width: "4%", height: "auto" }}
+            style={{ position: "relative", width: "45px", height: "auto" }}
             onClick={() => {
               toggleButton();
               playBeep();
@@ -270,7 +270,7 @@ export default function GameStart() {
             style={{
               display: "inline-block",
               position: "relative",
-              top: "0.1rem",
+              top: "0rem",
               left: "3.5rem",
             }}
           >
