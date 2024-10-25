@@ -281,7 +281,7 @@ export default function GameStart() {
       {isOn ? (
         <Row className="fs-3 text-left mt-4 ms-5 me-1">
           {loading ? (
-            <div>Reaching for server. Please wait...</div>
+            <div>Waking up server. Hold on a minute...</div>
           ) : (
             <div>
               {displayedMessage}
