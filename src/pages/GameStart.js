@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import axios from "axios";
-import { Container, Row, Form, Button, Image } from "react-bootstrap";
+import { Container, Row, Form, Image } from "react-bootstrap";
 import "../style/global.scss";
 
 export default function GameStart() {
@@ -20,8 +20,6 @@ export default function GameStart() {
   const [isCursorHidden, setIsCursorHidden] = useState(true);
   const [countdown, setCountdown] = useState(10);
   const [countdownActive, setCountdownActive] = useState(false);
-  const [isOption, setIsOption] = useState(false);
-  const [optionBuffer, setOptionBuffer] = useState("");
 
   const cpuSound = useRef(new Audio("cpu_answer_noise1.mp3"));
   const oldCpu = useRef(new Audio("old_cpu_sound.mp3"));
