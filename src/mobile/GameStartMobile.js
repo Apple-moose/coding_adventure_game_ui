@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import axios from "axios";
-import { Container, Row, Form, Image } from "react-bootstrap";
+import { Container, Row, Image } from "react-bootstrap";
 import "../style/global.scss";
 
 export default function GameStartMobile() {
@@ -232,7 +232,7 @@ export default function GameStartMobile() {
   //---------RENDER----------------------------------
 
   return (
-    <Container fluid className="GameBasic" style={{ padding: "0 1 rem" }}>
+    <Container fluid className="GameBasicMobile alt-font" style={{ padding: "0 1 rem" }}>
       <Row className="fs-2 text-left align-items-center">
         <div style={{ marginTop: "1rem" }}>
           <div

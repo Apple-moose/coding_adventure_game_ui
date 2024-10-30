@@ -1,18 +1,31 @@
-@import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Handjet:wght@100..900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Handjet:wght@100..900&display=swap");
 
-$headings-font-family: "Chakra Petch", serif;
+$chakra-font: "Chakra Petch", serif;
+$handjet-font: "Handjet", serif;
+
+$headings-font-family: $chakra-font;
 $headings-font-weight: 500;
+$font-family-base: $chakra-font;
+$font-weight-base: 400;
 
-$font-family-base: "Chakra Petch", serif;
-$font-weight: 3
-500;
+$alt-font-family: $handjet-font;
+$alt-font-weight: 500;
 
-//Other fonts:
-// @import url('https://fonts.googleapis.com/css2?family=Handjet:wght@100;200;300;600;900&display=swap');
+body {
+  font-family: $font-family-base;
+}
 
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: $headings-font-family;
+  font-weight: $headings-font-weight;
+}
 
-// $headings-font-family: "Handjet", serif;
-// $headings-font-weight: 100;
-
-// $font-family-base: "Handjet", serif;
-// $font-weight: 100;
+.alt-font {
+  font-family: $alt-font-family;
+  font-weight: $alt-font-weight;
+}
