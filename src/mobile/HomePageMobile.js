@@ -41,7 +41,7 @@ export default function HomePageMobile() {
           ></div>
           <div
             onClick={() => {
-              navigate("./start");
+              navigate("./mobile-start");
             }}
             style={{
               position: "absolute",
