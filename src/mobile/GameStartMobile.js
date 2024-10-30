@@ -5,9 +5,9 @@ import "../style/global.scss";
 
 export default function GameStartMobile() {
   //Local
-  const API_URL = `http://localhost:8000`;
+//   const API_URL = `http://localhost:8000`;
   //Online
-  //   const API_URL = `https://coding-adventurepipenv-run-uvicorn-main.onrender.com`;
+    const API_URL = `https://coding-adventurepipenv-run-uvicorn-main.onrender.com`;
 
   const [isOn, setIsOn] = useState(false);
   const [message, setMessage] = useState("");
@@ -188,7 +188,9 @@ export default function GameStartMobile() {
         clearInterval(charDisplayInterval);
       };
     }
-  }, [loading, message, isPaused, currentIndex, isCompleted, playSound]);
+  }, [loading, message, isPaused, currentIndex, isCompleted, playSound,
+    fetchGameData, isOption, optionBuffer
+  ]);
 
   // Countdown----------------------------
   useEffect(() => {
@@ -233,7 +235,7 @@ export default function GameStartMobile() {
 
   return (
     <Container fluid className="GameBasicMobile alt-font" style={{ padding: "0 1 rem" }}>
-      <Row className="fs-2 text-left align-items-center">
+      <Row className="fs-1 text-left align-items-center">
         <div style={{ marginTop: "1rem" }}>
           <div
             style={{ position: "relative", width: "45px", height: "auto" }}
@@ -280,7 +282,7 @@ export default function GameStartMobile() {
         </div>
       </Row>
       {isOn ? (
-        <Row className="fs-3 text-left mt-4 ms-5 me-1">
+        <Row className="fs-5 text-left mt-4 ms-5 me-1">
           {loading ? (
             <div>Waking up server. Hold on a minute...</div>
           ) : (

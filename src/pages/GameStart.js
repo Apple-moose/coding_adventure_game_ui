@@ -5,9 +5,9 @@ import "../style/global.scss";
 
 export default function GameStart() {
   //Local
-  const API_URL = `http://localhost:8000`;
+  // const API_URL = `http://localhost:8000`;
   //Online
-  //   const API_URL = `https://coding-adventurepipenv-run-uvicorn-main.onrender.com`;
+    const API_URL = `https://coding-adventurepipenv-run-uvicorn-main.onrender.com`;
 
   const [isOn, setIsOn] = useState(false);
   const [message, setMessage] = useState("");
@@ -20,7 +20,6 @@ export default function GameStart() {
   const [isCursorHidden, setIsCursorHidden] = useState(true);
   const [countdown, setCountdown] = useState(10);
   const [countdownActive, setCountdownActive] = useState(false);
-  //   const [option, setOption] = useState("");
   const [isOption, setIsOption] = useState(false);
   const [optionBuffer, setOptionBuffer] = useState("");
 
@@ -170,12 +169,8 @@ export default function GameStart() {
             stopSound();
             return;
           }
+          setDisplayedMessage((prev) => [...prev, currentChar]);
 
-          if (isOption) {
-            setOptionBuffer((prev) => prev + currentChar);
-          } else {
-            setDisplayedMessage((prev) => [...prev, currentChar]);
-          }
           if (currentIndex + 1 === message.length) {
             setIsPaused(true);
             setIsCompleted(true);

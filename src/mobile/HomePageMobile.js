@@ -10,7 +10,7 @@ export default function HomePageMobile() {
     <>
       <div className="HomePage">
         <Row className="w-100 justify-content-center">
-          <div className="mt-2 ms-3 fs-1 text-center title">
+          <div className="mt-2 mb-5 ms-3 fs-1 text-center title">
             -A Coder's Rhapsody-
           </div>
         </Row>
