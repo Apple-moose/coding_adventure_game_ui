@@ -282,7 +282,7 @@ export default function GameStartMobile() {
         </div>
       </Row>
       {isOn ? (
-        <Row className="fs-5 text-left mt-4 ms-5 me-1">
+        <Row className="fs-4 text-left mt-4 ms-5 me-1">
           {loading ? (
             <div>Waking up server. Hold on a minute...</div>
           ) : (
