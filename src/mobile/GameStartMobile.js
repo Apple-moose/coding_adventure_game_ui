@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import axios from "axios";
-import { Container, Row, Form, Button, Image } from "react-bootstrap";
+import { Container, Row, Form, Image } from "react-bootstrap";
 import "../style/global.scss";
 
-export default function GameStart() {
+export default function GameStartMobile() {
   //Local
   const API_URL = `http://localhost:8000`;
   //Online
@@ -17,10 +17,8 @@ export default function GameStart() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isCompleted, setIsCompleted] = useState(false);
   const [command, setCommand] = useState("");
-  const [isCursorHidden, setIsCursorHidden] = useState(true);
   const [countdown, setCountdown] = useState(10);
   const [countdownActive, setCountdownActive] = useState(false);
-  //   const [option, setOption] = useState("");
   const [isOption, setIsOption] = useState(false);
   const [optionBuffer, setOptionBuffer] = useState("");
 
@@ -36,7 +34,7 @@ export default function GameStart() {
   //--------------Async functions------------------------------------
   const fetchMessage = useCallback(async () => {
     try {
-      const response = await axios.get(`${API_URL}`);
+      const response = await axios.get(`${API_URL}/mobile`);
       const message = response.data.message;
       setMessage(message);
       setDisplayedMessage([]);
@@ -53,7 +51,7 @@ export default function GameStart() {
   const fetchGameData = useCallback(
     async (com) => {
       try {
-        const response = await axios.post(`${API_URL}/command`, {
+        const response = await axios.post(`${API_URL}/mobile/command`, {
           command: com,
         });
         const message = response.data.situation || response.data.message;
@@ -95,31 +93,6 @@ export default function GameStart() {
   const playBeep = () => {
     click_beep.current.play();
   };
-  //-----------Cursor control logic-------------------------------
-  const toggleCursor = (hide) => {
-    document.body.style.cursor = hide ? "none" : "default";
-  };
-
-  useEffect(() => {
-    const handleKeyCombination = (event) => {
-      if (event.ctrlKey && event.key === "q") {
-        setIsCursorHidden((prev) => !prev);
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyCombination);
-    return () => {
-      window.removeEventListener("keydown", handleKeyCombination);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (isOn) {
-      toggleCursor(isCursorHidden);
-    } else {
-      toggleCursor(!isCursorHidden);
-    }
-  }, [isOn, isCursorHidden]);
 
   //----------Dpendencies--------------------------------------------
   useEffect(() => {
@@ -168,6 +141,27 @@ export default function GameStart() {
             setCountdownActive(true);
             setIsCompleted(true);
             stopSound();
+            return;
+          }
+          if (currentChar === "[") {
+            setIsOption(true);
+            setOptionBuffer("");
+            return;
+          }
+          if (currentChar === "]") {
+            setIsOption(false);
+            const option = optionBuffer;
+
+            setDisplayedMessage((prev) => [
+              ...prev,
+              <span
+                key={`clickable-${currentIndex}`}
+                onClick={() => fetchGameData(option)}
+              >
+                {option}
+              </span>,
+            ]);
+            setOptionBuffer("");
             return;
           }
 
@@ -219,17 +213,18 @@ export default function GameStart() {
     };
   }, [countdownActive, countdown, isOn]);
 
+  //-------Key listener--------------------
   useEffect(() => {
-    const handleKeyPress = () => {
+    const handleInteraction = () => {
       if (isPaused && !isCompleted) {
         setIsPaused(false);
       }
     };
-    //-------Key listener--------------------
 
-    window.addEventListener("keydown", handleKeyPress);
+    window.addEventListener("touchstart", handleInteraction);
+
     return () => {
-      window.removeEventListener("keydown", handleKeyPress);
+      window.removeEventListener("touchstart", handleInteraction);
       setCommand("");
     };
   }, [isPaused, isCompleted]);
@@ -293,31 +288,7 @@ export default function GameStart() {
               {displayedMessage}
               {command}
               <b className="cursor">_</b>
-              <Form.Control
-                id="command"
-                name="command"
-                type="text"
-                value={command}
-                onChange={(e) => {
-                  setCommand(e.target.value);
-                  e.target.setSelectionRange(
-                    e.target.value.length,
-                    e.target.value.length
-                  );
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    if (isCompleted) {
-                      fetchGameData(command);
-                      setCommand("");
-                    }
-                    e.preventDefault();
-                  }
-                }}
-                autoFocus
-                autoComplete="off"
-              />
-
+           
               {countdownActive && (
                 <div className="countdown-display">
                   Extinction in{""} {countdown}

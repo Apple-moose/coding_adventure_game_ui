@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Row, Image } from "react-bootstrap";
 import "../style/global.scss";
 
-export default function HomePage() {
+export default function HomePageMobile() {
   const navigate = useNavigate();
 
   return (
@@ -26,7 +26,7 @@ export default function HomePage() {
           />
           <div
             onClick={() => {
-              navigate("./start");
+              navigate("./mobile-start");
             }}
             style={{
               position: "absolute",
