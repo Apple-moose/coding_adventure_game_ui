@@ -27,7 +27,7 @@ export default function GameStart() {
 
   //------------Button On-Off logic------------------------------
   const toggleButton = () => {
-    setIsOn((prev) => !prev);
+    setIsOn((off) => !off);
   };
 
   //--------------Async functions------------------------------------
@@ -78,11 +78,12 @@ export default function GameStart() {
     cpuSound.current.currentTime = 0;
   };
 
-  const playOldCpuSound = () => {
+  const playOldCpuSound = useCallback(() => {
+    if (oldCpu.current.paused) {
     oldCpu.current.volume = 0.05;
     oldCpu.current.loop = true;
-    oldCpu.current.play();
-  };
+    oldCpu.current.play().catch((err) => console.log("Play error: ", err));
+  }}, []);
 
   const stopOldCpuSound = () => {
     oldCpu.current.pause();
@@ -226,6 +227,24 @@ export default function GameStart() {
       setCommand("");
     };
   }, [isPaused, isCompleted]);
+    //------Visibility Listener-------------------
+
+    useEffect(() => {
+      const handleVisibilityChange = () => {
+        if (document.hidden) {
+          stopSound();
+          stopOldCpuSound();
+          setIsPaused(true);
+        } else if (isOn) {
+          playOldCpuSound();
+          setIsPaused(false);
+        }
+      };
+      document.addEventListener("visibilitychange", handleVisibilityChange);
+      return () => {
+        document.removeEventListener("visibilitychange", handleVisibilityChange);
+      };
+    }, [isOn, playOldCpuSound]);
 
   //---------RENDER----------------------------------
 

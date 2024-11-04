@@ -5,9 +5,9 @@ import "../style/global.scss";
 
 export default function GameStartMobile() {
   //Local
-//   const API_URL = `http://localhost:8000`;
+    // const API_URL = `http://localhost:8000`;
   //Online
-    const API_URL = `https://coding-adventurepipenv-run-uvicorn-main.onrender.com`;
+  const API_URL = `https://coding-adventurepipenv-run-uvicorn-main.onrender.com`;
 
   const [isOn, setIsOn] = useState(false);
   const [message, setMessage] = useState("");
@@ -28,9 +28,9 @@ export default function GameStartMobile() {
 
   //------------Button On-Off logic------------------------------
   const toggleButton = () => {
-    setIsOn((prev) => !prev);
+    setIsOn((off) => !off);
   };
-
+  
   //--------------Async functions------------------------------------
   const fetchMessage = useCallback(async () => {
     try {
@@ -79,11 +79,12 @@ export default function GameStartMobile() {
     cpuSound.current.currentTime = 0;
   };
 
-  const playOldCpuSound = () => {
+  const playOldCpuSound = useCallback(() => {
+    if (oldCpu.current.paused) {
     oldCpu.current.volume = 0.05;
     oldCpu.current.loop = true;
-    oldCpu.current.play();
-  };
+    oldCpu.current.play().catch((err) => console.log("Play error: ", err));
+  }}, []);
 
   const stopOldCpuSound = () => {
     oldCpu.current.pause();
@@ -101,7 +102,7 @@ export default function GameStartMobile() {
     } else {
       stopOldCpuSound();
     }
-  }, [isOn]);
+  }, [isOn, playOldCpuSound]);
 
   useEffect(() => {
     if (isOn) {
@@ -188,8 +189,16 @@ export default function GameStartMobile() {
         clearInterval(charDisplayInterval);
       };
     }
-  }, [loading, message, isPaused, currentIndex, isCompleted, playSound,
-    fetchGameData, isOption, optionBuffer
+  }, [
+    loading,
+    message,
+    isPaused,
+    currentIndex,
+    isCompleted,
+    playSound,
+    fetchGameData,
+    isOption,
+    optionBuffer,
   ]);
 
   // Countdown----------------------------
@@ -231,10 +240,34 @@ export default function GameStartMobile() {
     };
   }, [isPaused, isCompleted]);
 
+  //------Visibility Listener-------------------
+
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        stopSound();
+        stopOldCpuSound();
+        setIsPaused(true);
+      } else if (isOn) {
+        playOldCpuSound();
+        setIsPaused(false);
+      }
+    };
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, [isOn, playOldCpuSound]);
+
+
   //---------RENDER----------------------------------
 
   return (
-    <Container fluid className="GameBasicMobile alt-font" style={{ padding: "0 1 rem" }}>
+    <Container
+      fluid
+      className="GameBasicMobile alt-font"
+      style={{ padding: "0 1 rem" }}
+    >
       <Row className="fs-1 text-left align-items-center">
         <div style={{ marginTop: "1rem" }}>
           <div
@@ -290,7 +323,7 @@ export default function GameStartMobile() {
               {displayedMessage}
               {command}
               <b className="cursor">_</b>
-           
+
               {countdownActive && (
                 <div className="countdown-display">
                   Extinction in{""} {countdown}
