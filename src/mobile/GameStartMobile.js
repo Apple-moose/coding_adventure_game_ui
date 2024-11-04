@@ -5,7 +5,7 @@ import "../style/global.scss";
 
 export default function GameStartMobile() {
   //Local
-    // const API_URL = `http://localhost:8000`;
+  // const API_URL = `http://localhost:8000`;
   //Online
   const API_URL = `https://coding-adventurepipenv-run-uvicorn-main.onrender.com`;
 
@@ -30,7 +30,7 @@ export default function GameStartMobile() {
   const toggleButton = () => {
     setIsOn((off) => !off);
   };
-  
+
   //--------------Async functions------------------------------------
   const fetchMessage = useCallback(async () => {
     try {
@@ -81,10 +81,11 @@ export default function GameStartMobile() {
 
   const playOldCpuSound = useCallback(() => {
     if (oldCpu.current.paused) {
-    oldCpu.current.volume = 0.05;
-    oldCpu.current.loop = true;
-    oldCpu.current.play().catch((err) => console.log("Play error: ", err));
-  }}, []);
+      oldCpu.current.volume = 0.05;
+      oldCpu.current.loop = true;
+      oldCpu.current.play().catch((err) => console.log("Play error: ", err));
+    }
+  }, []);
 
   const stopOldCpuSound = () => {
     oldCpu.current.pause();
@@ -258,7 +259,6 @@ export default function GameStartMobile() {
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
   }, [isOn, playOldCpuSound]);
-
 
   //---------RENDER----------------------------------
 

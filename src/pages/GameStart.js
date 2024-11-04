@@ -7,7 +7,7 @@ export default function GameStart() {
   //Local
   // const API_URL = `http://localhost:8000`;
   //Online
-    const API_URL = `https://coding-adventurepipenv-run-uvicorn-main.onrender.com`;
+  const API_URL = `https://coding-adventurepipenv-run-uvicorn-main.onrender.com`;
 
   const [isOn, setIsOn] = useState(false);
   const [message, setMessage] = useState("");
@@ -80,10 +80,11 @@ export default function GameStart() {
 
   const playOldCpuSound = useCallback(() => {
     if (oldCpu.current.paused) {
-    oldCpu.current.volume = 0.05;
-    oldCpu.current.loop = true;
-    oldCpu.current.play().catch((err) => console.log("Play error: ", err));
-  }}, []);
+      oldCpu.current.volume = 0.05;
+      oldCpu.current.loop = true;
+      oldCpu.current.play().catch((err) => console.log("Play error: ", err));
+    }
+  }, []);
 
   const stopOldCpuSound = () => {
     oldCpu.current.pause();
@@ -126,7 +127,7 @@ export default function GameStart() {
     } else {
       stopOldCpuSound();
     }
-  }, [isOn]);
+  }, [isOn, playOldCpuSound]);
 
   useEffect(() => {
     if (isOn) {
@@ -227,24 +228,24 @@ export default function GameStart() {
       setCommand("");
     };
   }, [isPaused, isCompleted]);
-    //------Visibility Listener-------------------
+  //------Visibility Listener-------------------
 
-    useEffect(() => {
-      const handleVisibilityChange = () => {
-        if (document.hidden) {
-          stopSound();
-          stopOldCpuSound();
-          setIsPaused(true);
-        } else if (isOn) {
-          playOldCpuSound();
-          setIsPaused(false);
-        }
-      };
-      document.addEventListener("visibilitychange", handleVisibilityChange);
-      return () => {
-        document.removeEventListener("visibilitychange", handleVisibilityChange);
-      };
-    }, [isOn, playOldCpuSound]);
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        stopSound();
+        stopOldCpuSound();
+        setIsPaused(true);
+      } else if (isOn) {
+        playOldCpuSound();
+        setIsPaused(false);
+      }
+    };
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, [isOn, playOldCpuSound]);
 
   //---------RENDER----------------------------------
 
