@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef, useCallback, memo } from "react";
 import axios from "axios";
 import { Container, Row, Form, Image } from "react-bootstrap";
 import "../style/global.scss";
@@ -24,6 +24,12 @@ export default function GameStart() {
   const cpuSound = useRef(new Audio("cpu_answer_noise1.mp3"));
   const oldCpu = useRef(new Audio("old_cpu_sound.mp3"));
   const click_beep = useRef(new Audio("click_beep.mp3"));
+
+  //------Memoized component for message--------------------------------
+  const GameText = memo(({ message }) => {
+    console.log("Rendered gametext");
+    return <div>{message}</div>;
+  });
 
   //------------Button On-Off logic------------------------------
   const toggleButton = () => {
@@ -303,7 +309,7 @@ export default function GameStart() {
             <div>Waking up server. Hold on a minute...</div>
           ) : (
             <div>
-              {displayedMessage}
+              <GameText message={displayedMessage} />
               {command}
               <b className="cursor">_</b>
               <Form.Control

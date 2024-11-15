@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef, useCallback, memo } from "react";
 import axios from "axios";
 import { Container, Row, Image } from "react-bootstrap";
 import "../style/global.scss";
@@ -16,7 +16,6 @@ export default function GameStartMobile() {
   const [isPaused, setIsPaused] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isCompleted, setIsCompleted] = useState(false);
-  const [command, setCommand] = useState("");
   const [countdown, setCountdown] = useState(10);
   const [countdownActive, setCountdownActive] = useState(false);
   const [isOption, setIsOption] = useState(false);
@@ -25,6 +24,12 @@ export default function GameStartMobile() {
   const cpuSound = useRef(new Audio("cpu_answer_noise1.mp3"));
   const oldCpu = useRef(new Audio("old_cpu_sound.mp3"));
   const click_beep = useRef(new Audio("click_beep.mp3"));
+
+  //------Memoized component for message--------------------------------
+  const GameText = memo(({ message }) => {
+    console.log("Rendered gametext");
+    return <div>{message}</div>;
+  });
 
   //------------Button On-Off logic------------------------------
   const toggleButton = () => {
@@ -212,8 +217,9 @@ export default function GameStartMobile() {
           setCountdown((t) => t - 1);
         }, 1000);
       } else if (countdown === 0) {
-        setIsOn(false);
+        clearInterval(countdownInterval);
         setCountdownActive(false);
+        setIsOn(false);
       }
     } else {
       setCountdown(10);
@@ -225,6 +231,14 @@ export default function GameStartMobile() {
     };
   }, [countdownActive, countdown, isOn]);
 
+  //---------Audio pre-Loader---------------------
+
+  useEffect(() => {
+    [cpuSound.current, oldCpu.current, click_beep.current].forEach((audio) => {
+      audio.load();
+    });
+  }, []);
+
   //-------Key listener--------------------
   useEffect(() => {
     const handleInteraction = () => {
@@ -233,11 +247,10 @@ export default function GameStartMobile() {
       }
     };
 
-    window.addEventListener("touchstart", handleInteraction);
+    window.addEventListener("touchstart", handleInteraction, { passive: true });
 
     return () => {
       window.removeEventListener("touchstart", handleInteraction);
-      setCommand("");
     };
   }, [isPaused, isCompleted]);
 
@@ -320,8 +333,7 @@ export default function GameStartMobile() {
             <div>Waking up server. Hold on a minute...</div>
           ) : (
             <div>
-              {displayedMessage}
-              {command}
+              <GameText message={displayedMessage} />
               <b className="cursor">_</b>
 
               {countdownActive && (
