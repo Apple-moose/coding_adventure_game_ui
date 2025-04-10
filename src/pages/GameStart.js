@@ -5,9 +5,9 @@ import "../style/global.scss";
 
 export default function GameStart() {
   //Local
-  // const API_URL = `http://localhost:8000`;
+  const API_URL = `http://127.0.0.1:7500`;
   //Online
-  const API_URL = `https://coding-adventurepipenv-run-uvicorn-main.onrender.com`;
+  // const API_URL = `https://coding-adventurepipenv-run-uvicorn-main.onrender.com`;
 
   const [isOn, setIsOn] = useState(false);
   const [message, setMessage] = useState("");
@@ -28,7 +28,7 @@ export default function GameStart() {
   //------Memoized component for message--------------------------------
   const GameText = memo(({ message }) => {
     console.log("Rendered gametext");
-    return <div>{message}</div>;
+    return <span>{message}</span>;
   });
 
   //------------Button On-Off logic------------------------------

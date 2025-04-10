@@ -5,9 +5,9 @@ import "../style/global.scss";
 
 export default function GameStartMobile() {
   //Local
-  // const API_URL = `http://localhost:8000`;
+  const API_URL = `http://127.0.0.1:7500`;
   //Online
-  const API_URL = `https://coding-adventurepipenv-run-uvicorn-main.onrender.com`;
+  // const API_URL = `https://coding-adventurepipenv-run-uvicorn-main.onrender.com`;
 
   const [isOn, setIsOn] = useState(false);
   const [message, setMessage] = useState("");
